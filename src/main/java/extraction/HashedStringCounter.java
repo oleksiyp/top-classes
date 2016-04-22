@@ -19,9 +19,6 @@ public class HashedStringCounter {
     }
 
     private void add(ByteString str, long val) {
-        if (str.toString().startsWith("liquibase.ext.logging")) {
-            System.out.println("added " + str + " " + val);
-        }
         for (int n = 0; n < table.length; n++) {
             int item = openAddressItem(str, n);
 

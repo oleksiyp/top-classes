@@ -15,14 +15,14 @@ public class LastMavenVersionDetector {
 
     }
 
-    private ComparableVersion getLatestVersion(File File) {
-        File = File.getAbsoluteFile();
+    private ComparableVersion getLatestVersion(File file) {
+        file = file.getAbsoluteFile();
 
-        if (latestFile != null && latestFile.equals(File)) {
+        if (latestFile != null && latestFile.equals(file)) {
             return latest;
         }
 
-        latestFile = File;
+        latestFile = file;
         latest = null;
 
         File[] lst = latestFile.listFiles();
