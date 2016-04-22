@@ -9,7 +9,7 @@
   <version>1.0-SNAPSHOT</version>
 
   <scm>
-    <connection>scm:git:ssh://git@github.com:oleksiyp/top-classes.git</connection>
+    <connection>scm:git:git@github.com:oleksiyp/top-classes.git</connection>
     <url>https://github.com/oleksiyp/top-classes</url>
   </scm>
 
