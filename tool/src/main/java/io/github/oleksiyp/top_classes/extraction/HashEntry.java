@@ -1,4 +1,4 @@
-package extraction;
+package io.github.oleksiyp.top_classes.extraction;
 
 class HashEntry implements Comparable<HashEntry> {
     final ByteString key;

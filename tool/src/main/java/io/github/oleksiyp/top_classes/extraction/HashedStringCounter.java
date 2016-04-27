@@ -1,4 +1,4 @@
-package extraction;
+package io.github.oleksiyp.top_classes.extraction;
 
 public class HashedStringCounter {
     HashEntry[]table = new HashEntry[1024];

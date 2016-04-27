@@ -1,4 +1,4 @@
-package extraction;
+package io.github.oleksiyp.top_classes.extraction;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -83,7 +83,7 @@ public class ImportsExtractor {
 
             if (!Files.exists(path)) {
                 System.out.println("Provide existing path with JARs as first argument");
-                System.out.println("e.g.: java extraction.ImportsExtractor path");
+                System.out.println("e.g.: java io.github.oleksiyp.top_classes.extraction.ImportsExtractor path");
                 return;
             }
             System.out.println("Scanning " + path);

@@ -4,7 +4,7 @@
  *     <artifactId>maven-artifact</artifactId>
  *     <version>3.1.1</version>
  */
-package org.apache.maven.artifact.versioning;
+package io.github.oleksiyp.top_classes.extraction;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -35,7 +35,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.Stack;
 
-public class ComparableVersion
+class ComparableVersion
     implements Comparable<ComparableVersion>
 {
     private String value;

@@ -1,4 +1,4 @@
-package extraction;
+package io.github.oleksiyp.top_classes.extraction;
 
 import java.io.PrintStream;
 import java.nio.charset.Charset;

@@ -1,8 +1,6 @@
-package extraction;
+package io.github.oleksiyp.top_classes.extraction;
 
 import java.io.File;
-
-import org.apache.maven.artifact.versioning.ComparableVersion;
 
 public class LastMavenVersionDetector {
     ComparableVersion latest = null;
