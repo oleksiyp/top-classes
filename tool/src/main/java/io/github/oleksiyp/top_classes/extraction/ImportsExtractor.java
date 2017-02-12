@@ -35,12 +35,12 @@ public class ImportsExtractor {
     private final PrintStream out;
     private byte[] classBuf = new byte[1024];
 
-    HashedStringCounter hashTable = new HashedStringCounter();
+    HashedStringCounter packages = new HashedStringCounter();
+    HashedStringCounter classes = new HashedStringCounter();
     boolean classesOnly;
 
-    public ImportsExtractor(PrintStream out, boolean classesOnly) {
+    public ImportsExtractor(PrintStream out) {
         this.out = out;
-        this.classesOnly = classesOnly;
     }
 
     public static class ExtractImportVisitor extends SimpleFileVisitor<Path> {
@@ -69,7 +69,7 @@ public class ImportsExtractor {
     }
 
     public static void main(String[] args) {
-        ImportsExtractor ex = new ImportsExtractor(System.out, false);
+        ImportsExtractor ex = new ImportsExtractor(System.out);
 
         try {
             long start = System.nanoTime();
@@ -91,7 +91,7 @@ public class ImportsExtractor {
 
             ExtractImportVisitor visitor = new ExtractImportVisitor(ex, detector);
             Files.walkFileTree(path, visitor);
-            System.out.println("Read " + visitor.nJars + " JARs " + ex.hashTable.bucketsFilled + " imports found");
+            System.out.println("Read " + visitor.nJars + " JARs " + ex.packages.bucketsFilled + " imports found");
             ex.report();
             System.out.println("Time: " + (System.nanoTime() - start) / 1e9 + " s");
         } catch (IOException e) {
@@ -102,15 +102,26 @@ public class ImportsExtractor {
     private void report() {
         TopReporter.to(System.out)
                    .onlyFirst(50)
-                   .report(hashTable);
+                   .report(packages);
 
         String filename = "top-classes.txt";
         System.out.println("... (all results in " +  filename + ")");
 
         try (PrintStream out = new PrintStream(filename)) {
             TopReporter.to(out)
-                       .onlyFirst(1000)
-                       .report(hashTable);
+                    .onlyFirst(1000)
+                    .report(classes);
+        } catch (IOException ex) {
+            System.err.println("Error writing result to " + filename + " : " + ex);
+        }
+
+        filename = "top-packages.txt";
+        System.out.println("... (all results in " +  filename + ")");
+
+        try (PrintStream out = new PrintStream(filename)) {
+            TopReporter.to(out)
+                    .onlyFirst(1000)
+                    .report(packages);
         } catch (IOException ex) {
             System.err.println("Error writing result to " + filename + " : " + ex);
         }
@@ -170,14 +181,11 @@ public class ImportsExtractor {
                     int strLen = readUnsignedShort(strOff, buf);
                     strOff += 2;
                     if (buf[strOff] != '[') {
-                        if (classesOnly) {
-                            hashTable.add(new ByteString(buf, strOff, strLen));
-                        } else {
-                            for (int j = 0; j <= strLen; j++) {
-                                if (j == strLen ||
-                                    buf[strOff + j] == '/') {
-                                    hashTable.add(new ByteString(buf, strOff, j));
-                                }
+                        classes.add(new ByteString(buf, strOff, strLen));
+                        for (int j = 0; j <= strLen; j++) {
+                            if (j == strLen ||
+                                buf[strOff + j] == '/') {
+                                packages.add(new ByteString(buf, strOff, j));
                             }
                         }
                     }

@@ -23,8 +23,7 @@
 
     <distributionManagement>
         <repository>
-            <id>maven-repository</id>
-            <url>file://${project.build.directory}/mvn</url>
+            <id>maven-repository</id><url>file://${project.build.directory}/mvn</url>
         </repository>
     </distributionManagement>
 

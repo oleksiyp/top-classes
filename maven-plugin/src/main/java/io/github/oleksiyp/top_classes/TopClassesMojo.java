@@ -16,67 +16,58 @@ package io.github.oleksiyp.top_classes;
  * limitations under the License.
  */
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.artifact.PluginArtifact;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
- * Goal which touches a timestamp file.
+ * Goal which calculates top used classes.
  *
  * @goal touch
  * 
  * @phase process-sources
  */
-
-public class TopClassesMojo
-    extends AbstractMojo
+@Mojo( name = "top-classes", defaultPhase = LifecyclePhase.PRE_INTEGRATION_TEST, threadSafe = true )
+public class TopClassesMojo extends AbstractMojo
 {
-    /**
-     * Location of the file.
-     * @parameter expression="${project.build.directory}"
-     * @required
-     */
+    @Parameter( defaultValue = "${project}", readonly = true, required = true )
+    private MavenProject project;
+
+    @Parameter(defaultValue = "${project.build.directory}", required = true, readonly = true )
     private File outputDirectory;
 
     public void execute()
         throws MojoExecutionException
     {
-        File f = outputDirectory;
-
-        if ( !f.exists() )
-        {
-            f.mkdirs();
+        Artifact artifact = project.getArtifact();
+        if (!"jar".equals(artifact.getClassifier())) {
+            return;
         }
 
-        File touch = new File( f, "touch.txt" );
+//        project.addAttachedArtifact(new DefaultArtifact(
+//                artifact.getGroupId(),
+//                artifact.getArtifactId(),
+//                artifact.getVersion(),
+//                artifact.getScope(),
+//                artifact.getType(),
+//                "top",
+//                new DefaultArtifactHandler("top")
+//        ));
 
-        FileWriter w = null;
-        try
-        {
-            w = new FileWriter( touch );
-
-            w.write( "touch.txt" );
-        }
-        catch ( IOException e )
-        {
-            throw new MojoExecutionException( "Error creating file " + touch, e );
-        }
-        finally
-        {
-            if ( w != null )
-            {
-                try
-                {
-                    w.close();
-                }
-                catch ( IOException e )
-                {
-                    // ignore
-                }
-            }
-        }
+        File jarFile = artifact.getFile();
+        getLog().info(jarFile.toString());
     }
 }
